@@ -1,4 +1,3 @@
-
 #include "VICTORIA_ROSSI_project1.h"
 #include "testing.h"
 
@@ -239,11 +238,52 @@ vector<T>& quick_partition(vector<T> &list, bool descending) {
  * */
 template<typename T>
 void merge_sort(vector<T> &list, bool decending) {
-    // Your code here!
+    if (list.size() <= 1) return;
+
+    int mid = list.size() / 2;
+
+    // divide
+    vector<T> left(list.begin(), list.begin() + mid);
+    vector<T> right(list.begin() + mid, list.end());
+
+    merge_sort(left, decending);
+    merge_sort(right, decending);
+
+    // merge
+    int i = 0, j = 0, k = 0;
+    while(i < left.size() && j < right.size()){
+        if(decending){
+            if(left[i] > right[j]){
+                list[k] = left[i];
+                i++;
+            } else {
+                list[k] = right[j];
+                j++;
+            }
+        } else {
+            if(left[i] < right[j]){
+                list[k] = left[i];
+                i++;
+            } else {
+                list[k] = right[j];
+                j++;
+            }
+        }
+        k++;
+    }
+
+    // add leftover elements
+    while(i < left.size()){
+        list[k] = left[i];
+        i++;
+        k++;
+    }
+    while(j < right.size()){
+        list[k] = right[j];
+        j++;
+        k++;    
+    }
 }
-
-
-
 
 
 
@@ -361,6 +401,65 @@ void radix_sort(vector<T> &list, unsigned int base, bool descending) {
 }
 
 
+void merge_sort_test(){
+    vector<int> test_list_1 = gen_unique_list(100);
+    vector<int> test_list_2 = gen_random_list(100);
+    vector<int> test_list_3 = gen_descending_list(100);
+    vector<int> test_list_4 = gen_ascending_list(100);
+    vector<int> test_list_5 = gen_all_equal_list(100);
+    vector<int> test_list_6 = gen_many_dupes_list(100);
+    vector<int> test_list_7 = gen_one_percent_rand_list(100);
+
+    merge_sort(test_list_1);
+    merge_sort(test_list_2);
+    merge_sort(test_list_3);
+    merge_sort(test_list_4);
+    merge_sort(test_list_5);
+    merge_sort(test_list_6);
+    merge_sort(test_list_7);
+
+    if(is_list_sorted(test_list_1)){
+        cout <<  "MERGE SORT UNIQUE LIST PASSED" << endl;
+    } else {
+        cout << "MERGE SORT UNIQUE LIST FAILED" << endl;
+    }
+    
+    if(is_list_sorted(test_list_2)){
+        cout <<  "MERGE SORT RANDOM LIST PASSED" << endl;
+    } else {
+        cout << "MERGE SORT RANDOM LIST FAILED" << endl;
+    }
+
+    if(is_list_sorted(test_list_3)){
+        cout <<  "MERGE SORT DESCENDING LIST PASSED" << endl;
+    } else {
+        cout << "MERGE SORT DESCENDING LIST FAILED" << endl;
+    }
+
+    if(is_list_sorted(test_list_4)){
+        cout <<  "MERGE SORT ASCENDING LIST PASSED" << endl;
+    } else {
+        cout << "MERGE SORT ASCENDING LIST FAILED" << endl;
+    }
+
+    if(is_list_sorted(test_list_5)){
+        cout <<  "MERGE SORT ALL EQUAL PASSED" << endl;
+    } else {
+        cout << "MERGE SORT ALL EQUAL LIST FAILED" << endl;
+    }
+
+    if(is_list_sorted(test_list_6)){
+        cout <<  "MERGE SORT MANY DUPLES LIST PASSED" << endl;
+    } else {
+        cout << "MERGE SORT MANY DUPLES LIST FAILED" << endl;
+    }
+
+    if(is_list_sorted(test_list_7)){
+        cout << "MERGE SORT ONE PERCENT RAND LIST PASSED" << endl;
+    } else {
+        cout << "MERGE SORT ONE PERCENT RAND LIST FAILED" << endl;
+    }
+}
 
 
 
@@ -394,28 +493,6 @@ int main() {
     //my_hybrid_sort(test_list);
     //radix_sort(test_list);
 
-    vector<int> test_list = gen_random_list(10);
-    for (auto n : test_list) {
-        cout << n << ' ';
-    }
-    cout << endl;
+    merge_sort_test();
     
-    insertion_sort(test_list, true);
-    for (auto n : test_list) {
-        cout << n << ' ';
-    }
-    cout << endl;
-
-    cout << (is_list_sorted(test_list, true)?"Sorted":"Not sorted") << endl;
-
-    return 0;
 }
-
-
-
-
-
-
-
-
-

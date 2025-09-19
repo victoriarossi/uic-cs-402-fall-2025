@@ -12,7 +12,14 @@ void print_list(vector<T>& list) {
     std::cout << "]\n";
 }
 
-/* bool is_sorted(vector<T> list)*/
+void print_list_group(vector<int> &list){
+    std::cout << "[ ";
+    for(auto n : list) {
+        std::cout << n << ' ';
+    }
+    std::cout << "]\n";
+}
+
 bool is_list_sorted(vector<int> &list, bool descending) {
     for(unsigned int i = 0; i < list.size()-1; i++) {
         if(descending){

@@ -20,7 +20,7 @@ unsigned int get_rand_index(unsigned int len) {
 
 /*** STUDENT HELPER FUNCTIONS HERE ***/
 
-
+void merge_sort_test();
 
 /*** END STUDENT HELPER FUNCTIONS ***/
 
