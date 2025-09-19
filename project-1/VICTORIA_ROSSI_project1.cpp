@@ -205,7 +205,7 @@ void insertion_sort(vector<T> &list, bool descending) {
 template<typename T>
 void quicksort(vector<T> &list, bool descending) {
     // Your code here!
-    return quick_partition(list, descending);
+    quick_partition(list, descending);
 }
 
 
@@ -469,16 +469,6 @@ void sorting_test(int test_name, bool descending=false) {
     string function_name = "";
 
     switch(test_name){
-        case test_types::MERGE:
-            merge_sort(test_list_1, descending);
-            merge_sort(test_list_2, descending);
-            merge_sort(test_list_3, descending);
-            merge_sort(test_list_4, descending);
-            merge_sort(test_list_5, descending);
-            merge_sort(test_list_6, descending);
-            merge_sort(test_list_7, descending);
-            function_name = "MERGE SORT";
-            break;
         case test_types::BUBBLE:
             bubble_sort(test_list_1, descending);
             bubble_sort(test_list_2, descending);
@@ -488,6 +478,46 @@ void sorting_test(int test_name, bool descending=false) {
             bubble_sort(test_list_6, descending);
             bubble_sort(test_list_7, descending);
             function_name = "BUBBLE SORT";
+            break;
+        case test_types::SELECTION:
+            selection_sort(test_list_1, descending);
+            selection_sort(test_list_2, descending);
+            selection_sort(test_list_3, descending);
+            selection_sort(test_list_4, descending);
+            selection_sort(test_list_5, descending);
+            selection_sort(test_list_6, descending);
+            selection_sort(test_list_7, descending);
+            function_name = "SELECTION SORT";
+            break;
+        case test_types::INSERTION:
+            insertion_sort(test_list_1, descending);
+            insertion_sort(test_list_2, descending);
+            insertion_sort(test_list_3, descending);
+            insertion_sort(test_list_4, descending);
+            insertion_sort(test_list_5, descending);
+            insertion_sort(test_list_6, descending);
+            insertion_sort(test_list_7, descending);
+            function_name = "INSERTION SORT";
+            break;
+        case test_types::QUICK:
+            quicksort(test_list_1, descending);
+            quicksort(test_list_2, descending);
+            quicksort(test_list_3, descending);
+            quicksort(test_list_4, descending);
+            quicksort(test_list_5, descending);
+            quicksort(test_list_6, descending);
+            quicksort(test_list_7, descending);
+            function_name = "QUICK SORT";
+            break;
+        case test_types::MERGE:
+            merge_sort(test_list_1, descending);
+            merge_sort(test_list_2, descending);
+            merge_sort(test_list_3, descending);
+            merge_sort(test_list_4, descending);
+            merge_sort(test_list_5, descending);
+            merge_sort(test_list_6, descending);
+            merge_sort(test_list_7, descending);
+            function_name = "MERGE SORT";
             break;
         default:
             cout << "RUNNING MERGE SORT TESTS" << endl;
@@ -572,6 +602,21 @@ int main() {
 
     cout << "-----------------" << endl;
 
+    sorting_test(test_types::SELECTION, true);
+
+    cout << "-----------------" << endl;
+
+    sorting_test(test_types::INSERTION, true);
+
+    cout << "-----------------" << endl;
+    
+    sorting_test(test_types::QUICK, true);
+    
+    cout << "-----------------" << endl;
+
     sorting_test(test_types::MERGE, true);
     
+    cout << "-----------------" << endl;
+
+
 }

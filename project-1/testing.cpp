@@ -12,24 +12,6 @@ void print_list(vector<T>& list) {
     std::cout << "]\n";
 }
 
-void print_list_group(vector<int> &list){
-    std::cout << "[ ";
-    for(auto n : list) {
-        std::cout << n << ' ';
-    }
-    std::cout << "]\n";
-}
-
-bool is_list_sorted(vector<int> &list, bool descending) {
-    for(unsigned int i = 0; i < list.size()-1; i++) {
-        if(descending){
-            if(list[i] < list[i+1]) return false;
-        } else {
-            if(list[i] > list[i+1]) return false;
-        }
-    }
-    return true;
-}
 
 
 /* Generate shuffled list of integers from 0 to len-1 */
@@ -38,12 +20,12 @@ vector<int> gen_unique_list(unsigned int len) {
     for(int i = 0; i < len; i++) {
         int_list.push_back(i+1);
     }
-
+    
     auto rd = random_device {};
     auto rng = default_random_engine { rd() };
-
+    
     ranges::shuffle(int_list,rng);
-
+    
     return int_list;
 }
 
@@ -51,12 +33,12 @@ vector<int> gen_unique_list(unsigned int len) {
 vector<int> gen_random_list(unsigned int len) {
 
     vector<int> int_list {};
-
+    
     srand(time({}));
     for(int i = 0; i < len; i++) {
         int_list.push_back(static_cast<int>(rand()));
     }
-
+    
     return int_list;
 }
 
@@ -69,7 +51,7 @@ vector<int> gen_descending_list(unsigned int len) {
         int_list.push_back(start_int);
         --start_int;
     }
-
+    
     return int_list;
 }
 
@@ -82,7 +64,7 @@ vector<int> gen_ascending_list(unsigned int len) {
         int_list.push_back(start_int);
         ++start_int;
     }
-
+    
     return int_list;
 }
 
@@ -94,7 +76,7 @@ vector<int> gen_asending_3swap_list(unsigned int len) {
     for(int i = 0; i < 3; i++) {
         unsigned int swap_index1 = static_cast<unsigned int>( rand() % len );
         unsigned int swap_index2 = static_cast<unsigned int>( rand() % len );
-
+        
         int temp = int_list[swap_index1];
         int_list[swap_index1] = int_list[swap_index2];
         int_list[swap_index2] = temp;
@@ -125,7 +107,7 @@ vector<int> gen_many_dupes_list(unsigned int len) {
             int_list.push_back(item);
         }
     }
-
+    
     return int_list;
 }
 
@@ -139,13 +121,31 @@ vector<int> gen_one_percent_rand_list(unsigned int len) {
     for(int i = 0; i < percent; i++) {
         unsigned int index = static_cast<unsigned int>( rand() % len );
         unsigned int value = static_cast<int>( rand() );
-
+        
         int_list[index] = value;
     }
-
+    
     return int_list;
 }
 
 
 /**** Student Tests Here ****/
 /* Feel free to write your own tests here! */
+void print_list_group(vector<int> &list){
+    std::cout << "[ ";
+    for(auto n : list) {
+        std::cout << n << ' ';
+    }
+    std::cout << "]\n";
+}
+
+bool is_list_sorted(vector<int> &list, bool descending) {
+    for(unsigned int i = 0; i < list.size()-1; i++) {
+        if(descending){
+            if(list[i] < list[i+1]) return false;
+        } else {
+            if(list[i] > list[i+1]) return false;
+        }
+    }
+    return true;
+}

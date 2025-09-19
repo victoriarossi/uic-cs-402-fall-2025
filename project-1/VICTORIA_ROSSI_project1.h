@@ -13,7 +13,7 @@ using namespace std;
 
 /*** Helper Functions ***/
 unsigned int get_rand_index(unsigned int len) {
-    std::srand(std::time({}));
+    std::srand(time(NULL));
     return static_cast<unsigned int>(std::rand() % len);
 }
 
