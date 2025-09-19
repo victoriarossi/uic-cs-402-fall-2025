@@ -401,7 +401,15 @@ void radix_sort(vector<T> &list, unsigned int base, bool descending) {
 }
 
 
-void merge_sort_test(){
+/*
+---------------------
+TESTING FUNCTIONS
+---------------------
+*/
+
+enum test_types {BUBBLE, SELECTION, INSERTION, QUICK, MERGE, BUCKET_MERGE, BINARY_RADIX, HYBRID, RADIX};
+
+void sorting_test(int test_name, bool descending=false) {
     vector<int> test_list_1 = gen_unique_list(100);
     vector<int> test_list_2 = gen_random_list(100);
     vector<int> test_list_3 = gen_descending_list(100);
@@ -410,54 +418,73 @@ void merge_sort_test(){
     vector<int> test_list_6 = gen_many_dupes_list(100);
     vector<int> test_list_7 = gen_one_percent_rand_list(100);
 
-    merge_sort(test_list_1);
-    merge_sort(test_list_2);
-    merge_sort(test_list_3);
-    merge_sort(test_list_4);
-    merge_sort(test_list_5);
-    merge_sort(test_list_6);
-    merge_sort(test_list_7);
+    string function_name = "";
 
-    if(is_list_sorted(test_list_1)){
-        cout <<  "MERGE SORT UNIQUE LIST PASSED" << endl;
+    switch(test_name){
+        case test_types::MERGE:
+            merge_sort(test_list_1, descending);
+            merge_sort(test_list_2, descending);
+            merge_sort(test_list_3, descending);
+            merge_sort(test_list_4, descending);
+            merge_sort(test_list_5, descending);
+            merge_sort(test_list_6, descending);
+            merge_sort(test_list_7, descending);
+            function_name = "MERGE SORT";
+            break;
+        case test_types::BUBBLE:
+            bubble_sort(test_list_1, descending);
+            bubble_sort(test_list_2, descending);
+            bubble_sort(test_list_3, descending);
+            bubble_sort(test_list_4, descending);
+            bubble_sort(test_list_5, descending);
+            bubble_sort(test_list_6, descending);
+            bubble_sort(test_list_7, descending);
+            function_name = "BUBBLE SORT";
+            break;
+        default:
+            cout << "RUNNING MERGE SORT TESTS" << endl;
+    }
+
+    if(is_list_sorted(test_list_1, descending)){
+        cout <<  function_name + " UNIQUE LIST PASSED" << endl;
     } else {
-        cout << "MERGE SORT UNIQUE LIST FAILED" << endl;
+        cout << function_name + " UNIQUE LIST FAILED" << endl;
     }
     
-    if(is_list_sorted(test_list_2)){
-        cout <<  "MERGE SORT RANDOM LIST PASSED" << endl;
+    if(is_list_sorted(test_list_2, descending)){
+        cout <<  function_name +  " RANDOM LIST PASSED" << endl;
     } else {
-        cout << "MERGE SORT RANDOM LIST FAILED" << endl;
+        cout << function_name + " RANDOM LIST FAILED" << endl;
     }
 
-    if(is_list_sorted(test_list_3)){
-        cout <<  "MERGE SORT DESCENDING LIST PASSED" << endl;
+    if(is_list_sorted(test_list_3, descending)){
+        cout <<  function_name + " DESCENDING LIST PASSED" << endl;
     } else {
-        cout << "MERGE SORT DESCENDING LIST FAILED" << endl;
+        cout << function_name + " DESCENDING LIST FAILED" << endl;
     }
 
-    if(is_list_sorted(test_list_4)){
-        cout <<  "MERGE SORT ASCENDING LIST PASSED" << endl;
+    if(is_list_sorted(test_list_4, descending)){
+        cout <<  function_name + " ASCENDING LIST PASSED" << endl;
     } else {
-        cout << "MERGE SORT ASCENDING LIST FAILED" << endl;
+        cout << function_name + " ASCENDING LIST FAILED" << endl;
     }
 
-    if(is_list_sorted(test_list_5)){
-        cout <<  "MERGE SORT ALL EQUAL PASSED" << endl;
+    if(is_list_sorted(test_list_5, descending)){
+        cout <<  function_name + " ALL EQUAL PASSED" << endl;
     } else {
-        cout << "MERGE SORT ALL EQUAL LIST FAILED" << endl;
+        cout << function_name + " ALL EQUAL LIST FAILED" << endl;
     }
 
-    if(is_list_sorted(test_list_6)){
-        cout <<  "MERGE SORT MANY DUPLES LIST PASSED" << endl;
+    if(is_list_sorted(test_list_6, descending)){
+        cout <<  function_name + " MANY DUPLES LIST PASSED" << endl;
     } else {
-        cout << "MERGE SORT MANY DUPLES LIST FAILED" << endl;
+        cout << function_name + " MANY DUPLES LIST FAILED" << endl;
     }
 
-    if(is_list_sorted(test_list_7)){
-        cout << "MERGE SORT ONE PERCENT RAND LIST PASSED" << endl;
+    if(is_list_sorted(test_list_7, descending)){
+        cout << function_name + " ONE PERCENT RAND LIST PASSED" << endl;
     } else {
-        cout << "MERGE SORT ONE PERCENT RAND LIST FAILED" << endl;
+        cout << function_name + " ONE PERCENT RAND LIST FAILED" << endl;
     }
 }
 
@@ -493,6 +520,10 @@ int main() {
     //my_hybrid_sort(test_list);
     //radix_sort(test_list);
 
-    merge_sort_test();
+    sorting_test(test_types::BUBBLE, true);
+
+    cout << "-----------------" << endl;
+
+    sorting_test(test_types::MERGE, true);
     
 }
