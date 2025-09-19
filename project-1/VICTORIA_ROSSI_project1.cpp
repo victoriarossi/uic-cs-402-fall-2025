@@ -107,7 +107,23 @@ void bubble_sort(vector<T> &list, bool descending) {
  * */
 template<typename T>
 void selection_sort(vector<T> &list, bool descending) {
-    // Your code here!
+    // Your code here!   
+    for (int i = 0; i < list.size(); i++){
+        int min_index = i;
+        for (int j = i+1; j < list.size(); j++){
+            if (descending){
+                if (list[j] > list[min_index]){
+                    min_index = j;
+                }
+            }
+            else{
+                if (list[j] < list[min_index]){
+                    min_index = j;
+                }
+            }
+        }
+        swap(list[i], list[min_index]);
+    }
 }
 
 
@@ -178,6 +194,7 @@ void insertion_sort(vector<T> &list, bool descending) {
 template<typename T>
 void quicksort(vector<T> &list, bool descending) {
     // Your code here!
+    return quick_partition(list, descending);
 }
 
 
@@ -193,6 +210,41 @@ vector<T>& quick_partition(vector<T> &list, bool descending) {
     //
     // You can use the helper function 
     //      unsigned int get_rand_index(unsigned int len)
+    if (list.size() <= 1) return list;
+
+    // Choose a random pivot
+    unsigned int pivotIndex = get_rand_index(list.size());
+    T pivot = list[pivotIndex];
+
+    vector<T> left, right;
+
+    // This loop goes through all elements, adds the things smaller than the pivot to <left> and the others to <right>
+    for (unsigned int i = 0; i < list.size(); i++){
+        if (i == pivotIndex) continue;
+        if ((descending && list[i] > pivot) || (!descending && list[i] < pivot)){
+            left.push_back(list[i]);
+        }
+        else{
+            right.push_back(list[i]);
+        }
+    }
+
+    // We then wanna recursively partition the left and right halves (quicksort calls quick_partition)
+    quicksort(left, descending);
+    quicksort(right, descending);
+
+    list.clear();
+    // Insert method takes 3 args:
+    // 1. Place to insert (right before)
+    // In this case, we want to put it right before the end of the list (last element)
+    // 2/3. Contents: in this case we're putting all the elements
+    // that are less than the pivot first, then the elements greater than it
+    list.insert(list.end(), left.begin(), left.end());
+    // The pivot should go in between the things smaller and larger than it
+    list.push_back(pivot); 
+    list.insert(list.end(), right.begin(), right.end());
+
+    return list;
 }
 
 
@@ -379,9 +431,10 @@ int main() {
     //radix_sort(test_list);
 
     vector<int> test_list = gen_unique_list(10);
-    print_list(test_list);
+    // print_list(test_list);
     bubble_sort(test_list);
-    print_list(test_list);
+    // print_list(test_list);
+    selection_sort(test_list);
 
     return 0;
 }
