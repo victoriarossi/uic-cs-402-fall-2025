@@ -60,16 +60,12 @@ void bubble_sort(vector<T> &list, bool descending) {
         for(int j = 0; j<list.size()-i-1; j++){
             if(descending){
                 if(list[j]<list[j+1]){
-                    T temp = list[j];
-                    list[j] = list[j+1];
-                    list[j+1] = temp;
+                    swap(list[j], list[j+1]);
                 }
             }
             else{
                 if(list[j]>list[j+1]){
-                    T temp = list[j];
-                    list[j] = list[j+1];
-                    list[j+1] = temp;
+                    swap(list[j], list[j+1]);
                 }
             }
         }
