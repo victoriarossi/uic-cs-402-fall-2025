@@ -1,4 +1,3 @@
-
 #include "VICTORIA_ROSSI_project1.h"
 #include "testing.h"
 
@@ -158,7 +157,23 @@ void selection_sort(vector<T> &list, bool descending) {
  * */
 template<typename T>
 void insertion_sort(vector<T> &list, bool descending) {
-    // Your code here!
+    for(int i = 1; i < list.size(); i++){
+        T key = list[i];
+        int j = i - 1;
+        if(descending){
+            while(j >= 0 && list[j] < key){
+                list[j+1] = list[j];
+                list[j] = key;
+                j--;
+            }
+        } else {
+            while(j >= 0 && list[j] > key){
+                list[j+1] = list[j];
+                list[j] = key;
+                j--;
+            }
+        }
+    }
 }
 
 
@@ -275,11 +290,52 @@ vector<T>& quick_partition(vector<T> &list, bool descending) {
  * */
 template<typename T>
 void merge_sort(vector<T> &list, bool decending) {
-    // Your code here!
+    if (list.size() <= 1) return;
+
+    int mid = list.size() / 2;
+
+    // divide
+    vector<T> left(list.begin(), list.begin() + mid);
+    vector<T> right(list.begin() + mid, list.end());
+
+    merge_sort(left, decending);
+    merge_sort(right, decending);
+
+    // merge
+    int i = 0, j = 0, k = 0;
+    while(i < left.size() && j < right.size()){
+        if(decending){
+            if(left[i] > right[j]){
+                list[k] = left[i];
+                i++;
+            } else {
+                list[k] = right[j];
+                j++;
+            }
+        } else {
+            if(left[i] < right[j]){
+                list[k] = left[i];
+                i++;
+            } else {
+                list[k] = right[j];
+                j++;
+            }
+        }
+        k++;
+    }
+
+    // add leftover elements
+    while(i < left.size()){
+        list[k] = left[i];
+        i++;
+        k++;
+    }
+    while(j < right.size()){
+        list[k] = right[j];
+        j++;
+        k++;    
+    }
 }
-
-
-
 
 
 
@@ -397,6 +453,92 @@ void radix_sort(vector<T> &list, unsigned int base, bool descending) {
 }
 
 
+/*
+---------------------
+TESTING FUNCTIONS
+---------------------
+*/
+
+enum test_types {BUBBLE, SELECTION, INSERTION, QUICK, MERGE, BUCKET_MERGE, BINARY_RADIX, HYBRID, RADIX};
+
+void sorting_test(int test_name, bool descending=false) {
+    vector<int> test_list_1 = gen_unique_list(100);
+    vector<int> test_list_2 = gen_random_list(100);
+    vector<int> test_list_3 = gen_descending_list(100);
+    vector<int> test_list_4 = gen_ascending_list(100);
+    vector<int> test_list_5 = gen_all_equal_list(100);
+    vector<int> test_list_6 = gen_many_dupes_list(100);
+    vector<int> test_list_7 = gen_one_percent_rand_list(100);
+
+    string function_name = "";
+
+    switch(test_name){
+        case test_types::MERGE:
+            merge_sort(test_list_1, descending);
+            merge_sort(test_list_2, descending);
+            merge_sort(test_list_3, descending);
+            merge_sort(test_list_4, descending);
+            merge_sort(test_list_5, descending);
+            merge_sort(test_list_6, descending);
+            merge_sort(test_list_7, descending);
+            function_name = "MERGE SORT";
+            break;
+        case test_types::BUBBLE:
+            bubble_sort(test_list_1, descending);
+            bubble_sort(test_list_2, descending);
+            bubble_sort(test_list_3, descending);
+            bubble_sort(test_list_4, descending);
+            bubble_sort(test_list_5, descending);
+            bubble_sort(test_list_6, descending);
+            bubble_sort(test_list_7, descending);
+            function_name = "BUBBLE SORT";
+            break;
+        default:
+            cout << "RUNNING MERGE SORT TESTS" << endl;
+    }
+
+    if(is_list_sorted(test_list_1, descending)){
+        cout <<  function_name + " UNIQUE LIST PASSED" << endl;
+    } else {
+        cout << function_name + " UNIQUE LIST FAILED" << endl;
+    }
+    
+    if(is_list_sorted(test_list_2, descending)){
+        cout <<  function_name +  " RANDOM LIST PASSED" << endl;
+    } else {
+        cout << function_name + " RANDOM LIST FAILED" << endl;
+    }
+
+    if(is_list_sorted(test_list_3, descending)){
+        cout <<  function_name + " DESCENDING LIST PASSED" << endl;
+    } else {
+        cout << function_name + " DESCENDING LIST FAILED" << endl;
+    }
+
+    if(is_list_sorted(test_list_4, descending)){
+        cout <<  function_name + " ASCENDING LIST PASSED" << endl;
+    } else {
+        cout << function_name + " ASCENDING LIST FAILED" << endl;
+    }
+
+    if(is_list_sorted(test_list_5, descending)){
+        cout <<  function_name + " ALL EQUAL PASSED" << endl;
+    } else {
+        cout << function_name + " ALL EQUAL LIST FAILED" << endl;
+    }
+
+    if(is_list_sorted(test_list_6, descending)){
+        cout <<  function_name + " MANY DUPLES LIST PASSED" << endl;
+    } else {
+        cout << function_name + " MANY DUPLES LIST FAILED" << endl;
+    }
+
+    if(is_list_sorted(test_list_7, descending)){
+        cout << function_name + " ONE PERCENT RAND LIST PASSED" << endl;
+    } else {
+        cout << function_name + " ONE PERCENT RAND LIST FAILED" << endl;
+    }
+}
 
 
 
@@ -430,20 +572,10 @@ int main() {
     //my_hybrid_sort(test_list);
     //radix_sort(test_list);
 
-    vector<int> test_list = gen_unique_list(10);
-    // print_list(test_list);
-    bubble_sort(test_list);
-    // print_list(test_list);
-    selection_sort(test_list);
+    sorting_test(test_types::BUBBLE, true);
 
-    return 0;
+    cout << "-----------------" << endl;
+
+    sorting_test(test_types::MERGE, true);
+    
 }
-
-
-
-
-
-
-
-
-

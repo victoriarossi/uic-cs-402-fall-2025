@@ -12,6 +12,25 @@ void print_list(vector<T>& list) {
     std::cout << "]\n";
 }
 
+void print_list_group(vector<int> &list){
+    std::cout << "[ ";
+    for(auto n : list) {
+        std::cout << n << ' ';
+    }
+    std::cout << "]\n";
+}
+
+bool is_list_sorted(vector<int> &list, bool descending) {
+    for(unsigned int i = 0; i < list.size()-1; i++) {
+        if(descending){
+            if(list[i] < list[i+1]) return false;
+        } else {
+            if(list[i] > list[i+1]) return false;
+        }
+    }
+    return true;
+}
+
 
 /* Generate shuffled list of integers from 0 to len-1 */
 vector<int> gen_unique_list(unsigned int len) {
@@ -80,6 +99,7 @@ vector<int> gen_asending_3swap_list(unsigned int len) {
         int_list[swap_index1] = int_list[swap_index2];
         int_list[swap_index2] = temp;
     }
+    return int_list;
 }
 
 /* Genarates a list of all equal entries of length len */
