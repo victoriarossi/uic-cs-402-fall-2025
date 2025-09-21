@@ -335,6 +335,70 @@ void merge_sort(vector<T> &list, bool decending) {
 
 
 
+/* Merge Lists
+ *
+ * Helper function for Bucket Merge Sort. You will implement this to help with your
+ * bucket merge sort algorithm above.
+ *
+ */
+template<typename T>
+void merge_lists(vector<vector<T>> &buckets, vector<T> &list, bool descending){
+
+    int n = buckets.size();
+
+    while(n > 1){
+        int k = 0;
+        for(int i = 0; i < n; i += 2){
+            int j = 0, l = 0;
+
+            // merge buckets[i] and buckets[i+1] elem by elem
+            while(j < buckets[i].size() && (i + 1 < n) && l < buckets[i+1].size()){
+                if(descending){
+                    if(buckets[i][j] > buckets[i+1][l]){
+                        list.push_back(buckets[i][j]);
+                        j++;
+                    } else {
+                        list.push_back(buckets[i+1][l]);
+                        l++;
+                    }
+                } else {
+                    if(buckets[i][j] < buckets[i+1][l]){
+                        list.push_back(buckets[i][j]);
+                        j++;
+                    } else {
+                        list.push_back(buckets[i+1][l]);
+                        l++;
+                    }
+                }
+            }
+
+            // add leftover elements
+            while(j < buckets[i].size()){
+                list.push_back(buckets[i][j]);
+                j++;
+            } 
+
+            while((i + 1 < n) && l < buckets[i+1].size()){
+                list.push_back(buckets[i+1][l]);
+                l++;    
+            }
+
+            // after merging, save merged bucket back into buckets[k] for next pass
+            // eg: after first pass buckets[0] = merge(buckets[0], buckets[1])
+            //     after second pass buckets[1] = merge(buckets[2], buckets[3])
+            //     etc.
+            buckets[k] = vector<T>(list.end() - (j + l), list.end());
+            k++;
+        }
+        n = k; // update number of buckets
+        list.clear(); // clear list for next merge pass
+    }
+
+    // by the time we finish, all buckets will be merged into buckets[0] bc of line 390
+    if(n == 1){
+        list = buckets[0];
+    }
+}
 
 
 
@@ -362,7 +426,25 @@ void merge_sort(vector<T> &list, bool decending) {
  */
 template<typename T>
 void bucket_merge_sort(vector<T> &list, bool descending) {
-    // Your code here!
+    const int BUCKET_SIZE = 32; 
+
+    // divide list into buckets
+    vector<vector<T>> buckets;
+    for(int i = 0; i < list.size(); i += BUCKET_SIZE){
+        // create bucket of size BUCKET_SIZE or the remaining elements of list
+        // vector from idx of first elem in bucket to idx of last elem in bucket
+        vector<T> bucket(list.begin() + i, list.begin() + min(i + BUCKET_SIZE, (int)list.size()));
+        buckets.push_back(bucket);
+    }
+
+    // sort each bucket using fast algorithm (i.e. insertion)
+    for (int i = 0; i < buckets.size(); i++){
+        insertion_sort(buckets[i], descending);
+    }
+
+    // merge neighbouring buckets together
+    list.clear();
+    merge_lists(buckets, list, descending);
 }
 
 
@@ -519,6 +601,16 @@ void sorting_test(int test_name, bool descending=false) {
             merge_sort(test_list_7, descending);
             function_name = "MERGE SORT";
             break;
+        case test_types::BUCKET_MERGE:
+            bucket_merge_sort(test_list_1, descending);
+            bucket_merge_sort(test_list_2, descending);
+            bucket_merge_sort(test_list_3, descending);
+            bucket_merge_sort(test_list_4, descending);
+            bucket_merge_sort(test_list_5, descending);
+            bucket_merge_sort(test_list_6, descending);
+            bucket_merge_sort(test_list_7, descending);
+            function_name = "BUCKET MERGE SORT";
+            break;
         default:
             cout << "RUNNING MERGE SORT TESTS" << endl;
     }
@@ -573,31 +665,6 @@ int main() {
     /**** STUDENT CODE HERE ****/ 
 
 
-
-
-
-
-    /**** END STUDENT CODE ****/
-
-    /***** DO NOT MODIFY BELOW THIS LINE *****/
-    /*** INSTRUCTIONS ***
-     *
-     * Before submitting your code: 
-     *   - remove all code within the main function that you have written above the `do-not-modify` line;
-     *   - uncomment all lines below that begin with "//".
-     *
-     */
-    //vector<int> test_list {1, 2, 3, 4, 5};
-    //bubble_sort(test_list);
-    //selection_sort(test_list);
-    //insertion_sort(test_list);
-    //quicksort(test_list);
-    //merge_sort(test_list);
-    //bucket_merge_sort(test_list);
-    //binary_radix_sort(test_list);
-    //my_hybrid_sort(test_list);
-    //radix_sort(test_list);
-
     sorting_test(test_types::BUBBLE, true);
 
     cout << "-----------------" << endl;
@@ -618,5 +685,33 @@ int main() {
     
     cout << "-----------------" << endl;
 
+    sorting_test(test_types::BUCKET_MERGE, true);
 
+    // vector<int> test_list = gen_unique_list(70);
+    // print_list_group(test_list);
+    // bucket_merge_sort(test_list, false);
+    // print_list_group(test_list);
+
+
+
+    /**** END STUDENT CODE ****/
+
+    /***** DO NOT MODIFY BELOW THIS LINE *****/
+    /*** INSTRUCTIONS ***
+     *
+     * Before submitting your code: 
+     *   - remove all code within the main function that you have written above the `do-not-modify` line;
+     *   - uncomment all lines below that begin with "//".
+     *
+     */
+    // vector<int> test_list {1, 2, 3, 4, 5};
+    //bubble_sort(test_list);
+    //selection_sort(test_list);
+    //insertion_sort(test_list);
+    //quicksort(test_list);
+    //merge_sort(test_list);
+    //bucket_merge_sort(test_list);
+    //binary_radix_sort(test_list);
+    //my_hybrid_sort(test_list);
+    //radix_sort(test_list);
 }

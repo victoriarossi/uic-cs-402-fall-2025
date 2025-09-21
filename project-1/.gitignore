@@ -1,5 +1,0 @@
-tests/*
-startup/*
-.clangd
-.vscode/
-*.txt
