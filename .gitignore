@@ -1,0 +1,6 @@
+tests/*
+startup/*
+.clangd
+.vscode/
+*.txt
+../.vscode/

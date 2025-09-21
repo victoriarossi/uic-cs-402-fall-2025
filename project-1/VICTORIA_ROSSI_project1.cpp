@@ -337,8 +337,7 @@ void merge_sort(vector<T> &list, bool decending) {
 
 /* Merge Lists
  *
- * Helper function for Bucket Merge Sort. You will implement this to help with your
- * bucket merge sort algorithm above.
+ * Helper function for Bucket Merge Sort. This function will merge the buckets into the list.
  *
  */
 template<typename T>
