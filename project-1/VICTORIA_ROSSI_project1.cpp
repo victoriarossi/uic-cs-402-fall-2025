@@ -4,6 +4,7 @@
 #include <iostream>
 #include <algorithm>
 #include <chrono>
+#include <cmath>
 
 using namespace std;
 
@@ -230,6 +231,7 @@ vector<T>& quick_partition(vector<T> &list, bool descending) {
     vector<T> left, right;
 
     // This loop goes through all elements, adds the things smaller than the pivot to <left> and the others to <right>
+    // O(n) runtime
     for (unsigned int i = 0; i < list.size(); i++){
         if (i == pivotIndex) continue;
         if ((descending && list[i] > pivot) || (!descending && list[i] < pivot)){
@@ -241,11 +243,12 @@ vector<T>& quick_partition(vector<T> &list, bool descending) {
     }
 
     // We then wanna recursively partition the left and right halves (quicksort calls quick_partition)
+    // O(log n) runtime
     quicksort(left, descending);
     quicksort(right, descending);
 
     list.clear();
-    // Insert method takes 3 args:
+    // Insert method takes 2 args (3 in this case bc iterators):
     // 1. Place to insert (right before)
     // In this case, we want to put it right before the end of the list (last element)
     // 2/3. Contents: in this case we're putting all the elements
@@ -488,6 +491,88 @@ void binary_radix_sort(vector<T> &list, bool descending) {
 template<typename T>
 void my_hybrid_sort(vector<T> &list, bool descending) {
     // Your code here!
+    // I'm implementing introsort because I'm BORED - Mauricio
+    int max_recursion_depth = 2 * log2(list.size());
+    intro_sort(list, 0, list.size() -1, max_recursion_depth, descending);
+}
+
+template<typename T>
+// Inputs: List with ranges, descending flag
+// Makes two partitions in place within the list
+// Return: index of partition
+int _partition(vector<T>& list, int low, int high, bool descending) {
+    // Choose a random pivot index in [low, high]
+    int pivotIndex = low + get_rand_index(high - low + 1);
+    T pivot = list[pivotIndex];
+    swap(list[pivotIndex], list[high]); // To not swap the pivot
+    
+    int i = low; // place for the next element that belongs to the "left" side
+    for (int j = low; j < high; j++) {
+        if ((descending && list[j] > pivot) || (!descending && list[j] < pivot)) {
+            swap(list[i], list[j]);
+            i++;
+        }
+    }
+    // Place pivot (list[high])in its final position
+    swap(list[i], list[high]);
+    return i; // pivot index
+}
+
+template<typename T>
+void insertion_sort_w_range(vector<T> &list, int low, int high, bool descending) {
+    for (int i = low + 1; i <= high; i++) {
+        int j = i;
+        if (descending) {
+            while (j > low && list[j - 1] < list[j]) {
+                swap(list[j - 1], list[j]);
+                j--;
+            }
+        } else {
+            while (j > low && list[j - 1] > list[j]) {
+                swap(list[j - 1], list[j]);
+                j--;
+            }
+        }
+    }
+}
+
+template<typename T>
+void intro_sort(vector<T> &list, int low, int high, int max_depth, bool descending){
+    // Important business to start with: do we have a sorted list? "Sort" it!
+    if (high - low <= 1) return;
+    // No. Is it insertion sortable? Insertion-sort it!
+    if (high - low + 1 <= 32) {
+        insertion_sort_w_range(list, low, high, descending);
+        return;
+    }
+    // No. Have we recursed too many times? Heap-sort it!
+    // O(n log n)
+    if (max_depth <= 0) heap_sort(list, low, high,  descending);
+
+    // We proceed using quicksort as normal otherwise
+    int partitionIndex = _partition(list, low, high, descending);
+    // Now everything left of  <partitionIndex> is smaller than it
+    // And everything right of it is larger
+    // We can recurse
+    intro_sort(list, low, partitionIndex - 1, max_depth - 1, descending);
+    intro_sort(list, partitionIndex + 1, high, max_depth - 1, descending);
+}
+
+template<typename T>
+void heap_sort(vector<T> &list, int low, int high, bool descending){
+    auto first = list.begin() + low;
+    auto last = list.begin() + high + 1;
+    // make_heap() + sort_heap() heapifies a vector with the front/first element being the largest
+    if (descending) {
+        make_heap(first, last);
+        sort_heap(first, last);
+    }
+    // If we want it in ascending order, we add a <T> comparator
+    else {
+        make_heap(first, last, greater<T>());
+        sort_heap(first, last, greater<T>());
+    }
+    return;
 }
 
 
@@ -610,6 +695,16 @@ void sorting_test(int test_name, bool descending=false) {
             bucket_merge_sort(test_list_7, descending);
             function_name = "BUCKET MERGE SORT";
             break;
+        case test_types::HYBRID:
+            my_hybrid_sort(test_list_1, descending);
+            my_hybrid_sort(test_list_2, descending);
+            my_hybrid_sort(test_list_3, descending);
+            my_hybrid_sort(test_list_4, descending);
+            my_hybrid_sort(test_list_5, descending);
+            my_hybrid_sort(test_list_6, descending);
+            my_hybrid_sort(test_list_7, descending);
+            function_name = "INTRO SORT";
+            break;
         default:
             cout << "RUNNING MERGE SORT TESTS" << endl;
     }
@@ -618,6 +713,10 @@ void sorting_test(int test_name, bool descending=false) {
         cout <<  function_name + " UNIQUE LIST PASSED" << endl;
     } else {
         cout << function_name + " UNIQUE LIST FAILED" << endl;
+        cout << "LIST CONTENTS: " << endl;
+        for (const auto& item : test_list_1){
+            cout << item << endl;
+        }
     }
     
     if(is_list_sorted(test_list_2, descending)){
@@ -685,7 +784,10 @@ int main() {
     cout << "-----------------" << endl;
 
     sorting_test(test_types::BUCKET_MERGE, true);
+    
+    cout << "-----------------" << endl;
 
+    sorting_test(test_types::HYBRID, true);
     // vector<int> test_list = gen_unique_list(70);
     // print_list_group(test_list);
     // bucket_merge_sort(test_list, false);

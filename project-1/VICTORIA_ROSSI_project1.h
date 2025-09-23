@@ -22,6 +22,18 @@ unsigned int get_rand_index(unsigned int len) {
 
 void merge_sort_test();
 
+template<typename T>
+void intro_sort(vector<T> &list, int low, int high, int max_depth, bool descending);
+
+template<typename T>
+void insertion_sort_w_range(vector<T> &list, int low, int high, bool descending);
+
+template<typename T>
+void heap_sort(vector<T> &list, int low, int high, bool descending);
+
+template<typename T>
+int _partition(vector<T>& list, int low, int high, bool descending);
+
 /*** END STUDENT HELPER FUNCTIONS ***/
 
 
