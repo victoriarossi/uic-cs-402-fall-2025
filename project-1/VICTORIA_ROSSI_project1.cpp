@@ -511,8 +511,6 @@ void binary_radix_sort(vector<T> &list, bool descending) {
             }
         }
     }
-
-    return;
 }
 
 
