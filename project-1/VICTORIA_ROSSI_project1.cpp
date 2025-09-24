@@ -909,94 +909,94 @@ int sorting_test(int test_name, bool descending=false) {
 int main() {
     /**** STUDENT CODE HERE ****/
     
-    int descending_points = 0;
-    int ascending_points = 0;
+    // int descending_points = 0;
+    // int ascending_points = 0;
 
-    cout << "---- DESCENDING TESTS ----" << endl;
-    descending_points += sorting_test(test_types::BUBBLE, true);
+    // cout << "---- DESCENDING TESTS ----" << endl;
+    // descending_points += sorting_test(test_types::BUBBLE, true);
 
-    cout << "-----------------" << endl;
+    // cout << "-----------------" << endl;
 
-    descending_points += sorting_test(test_types::SELECTION, true);
+    // descending_points += sorting_test(test_types::SELECTION, true);
 
-    cout << "-----------------" << endl;
+    // cout << "-----------------" << endl;
 
-    descending_points += sorting_test(test_types::INSERTION, true);
+    // descending_points += sorting_test(test_types::INSERTION, true);
 
-    cout << "-----------------" << endl;
+    // cout << "-----------------" << endl;
     
-    descending_points += sorting_test(test_types::QUICK, true);
+    // descending_points += sorting_test(test_types::QUICK, true);
     
-    cout << "-----------------" << endl;
+    // cout << "-----------------" << endl;
 
-    descending_points += sorting_test(test_types::MERGE, true);
+    // descending_points += sorting_test(test_types::MERGE, true);
     
-    cout << "-----------------" << endl;
+    // cout << "-----------------" << endl;
 
-    descending_points += sorting_test(test_types::BUCKET_MERGE, true);
+    // descending_points += sorting_test(test_types::BUCKET_MERGE, true);
     
-    cout << "-----------------" << endl;
+    // cout << "-----------------" << endl;
 
-    descending_points += sorting_test(test_types::HYBRID, true);
+    // descending_points += sorting_test(test_types::HYBRID, true);
 
-    cout << "-----------------" << endl;
+    // cout << "-----------------" << endl;
 
-    descending_points += sorting_test(test_types::BINARY_RADIX, true);
+    // descending_points += sorting_test(test_types::BINARY_RADIX, true);
 
-    cout << "-----------------" << endl;
+    // cout << "-----------------" << endl;
 
-    descending_points += sorting_test(test_types::RADIX, true);
+    // descending_points += sorting_test(test_types::RADIX, true);
 
-    cout << "---- END OF DESCENDING TESTS ----" << endl;
+    // cout << "---- END OF DESCENDING TESTS ----" << endl;
     
-    cout << "---- ASCENDING TESTS ----" << endl;
+    // cout << "---- ASCENDING TESTS ----" << endl;
 
-    ascending_points += sorting_test(test_types::BUBBLE, false);
+    // ascending_points += sorting_test(test_types::BUBBLE, false);
 
-    cout << "-----------------" << endl;
+    // cout << "-----------------" << endl;
 
-    ascending_points += sorting_test(test_types::SELECTION, false);
+    // ascending_points += sorting_test(test_types::SELECTION, false);
 
-    cout << "-----------------" << endl;
+    // cout << "-----------------" << endl;
 
-    ascending_points += sorting_test(test_types::INSERTION, false);
+    // ascending_points += sorting_test(test_types::INSERTION, false);
 
-    cout << "-----------------" << endl;
+    // cout << "-----------------" << endl;
     
-    ascending_points += sorting_test(test_types::QUICK, false);
+    // ascending_points += sorting_test(test_types::QUICK, false);
     
-    cout << "-----------------" << endl;
+    // cout << "-----------------" << endl;
 
-    ascending_points += sorting_test(test_types::MERGE, false);
+    // ascending_points += sorting_test(test_types::MERGE, false);
     
-    cout << "-----------------" << endl;
+    // cout << "-----------------" << endl;
 
-    ascending_points += sorting_test(test_types::BUCKET_MERGE, false);
+    // ascending_points += sorting_test(test_types::BUCKET_MERGE, false);
     
-    cout << "-----------------" << endl;
+    // cout << "-----------------" << endl;
 
-    ascending_points += sorting_test(test_types::HYBRID, false);
+    // ascending_points += sorting_test(test_types::HYBRID, false);
 
-    cout << "-----------------" << endl;
+    // cout << "-----------------" << endl;
 
-    ascending_points += sorting_test(test_types::BINARY_RADIX, false);
+    // ascending_points += sorting_test(test_types::BINARY_RADIX, false);
 
-    cout << "-----------------" << endl;
+    // cout << "-----------------" << endl;
 
-    ascending_points += sorting_test(test_types::RADIX, false);
+    // ascending_points += sorting_test(test_types::RADIX, false);
 
-    cout << "---- END OF ASCENDING TESTS ----" << endl;
+    // cout << "---- END OF ASCENDING TESTS ----" << endl;
     
-    cout << endl;
-    // 7 * 9 == 63, so there are 63 tests total
-    cout << "---- FINAL SCORES ----" << endl;
-    cout << "DESCENDING TESTS: " << descending_points << " / 63 passed" << endl;
-    cout << "ASCENDING TESTS: " << ascending_points << " / 63 passed" << endl;
-    cout << "-----------------" << endl;
-    // vector<int> test_list = gen_ascending_list(70);
-    // print_list_group(test_list);
-    // binary_radix_sort(test_list, false);
-    // print_list_group(test_list);
+    // cout << endl;
+    // // 7 * 9 == 63, so there are 63 tests total
+    // cout << "---- FINAL SCORES ----" << endl;
+    // cout << "DESCENDING TESTS: " << descending_points << " / 63 passed" << endl;
+    // cout << "ASCENDING TESTS: " << ascending_points << " / 63 passed" << endl;
+    // cout << "-----------------" << endl;
+    // // vector<int> test_list = gen_ascending_list(70);
+    // // print_list_group(test_list);
+    // // binary_radix_sort(test_list, false);
+    // // print_list_group(test_list);
 
 
 
@@ -1010,14 +1010,14 @@ int main() {
      *   - uncomment all lines below that begin with "//".
      *
      */
-    // vector<int> test_list {1, 2, 3, 4, 5};
-    //bubble_sort(test_list);
-    //selection_sort(test_list);
-    //insertion_sort(test_list);
-    //quicksort(test_list);
-    //merge_sort(test_list);
-    //bucket_merge_sort(test_list);
-    //binary_radix_sort(test_list);
-    //my_hybrid_sort(test_list);
-    //radix_sort(test_list);
+    vector<int> test_list {1, 2, 3, 4, 5};
+    bubble_sort(test_list);
+    selection_sort(test_list);
+    insertion_sort(test_list);
+    quicksort(test_list);
+    merge_sort(test_list);
+    bucket_merge_sort(test_list);
+    binary_radix_sort(test_list);
+    my_hybrid_sort(test_list);
+    radix_sort(test_list);
 }
