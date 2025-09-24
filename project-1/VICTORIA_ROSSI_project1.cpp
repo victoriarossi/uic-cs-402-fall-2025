@@ -744,7 +744,7 @@ TESTING FUNCTIONS
 
 enum test_types {BUBBLE, SELECTION, INSERTION, QUICK, MERGE, BUCKET_MERGE, BINARY_RADIX, HYBRID, RADIX};
 
-void sorting_test(int test_name, bool descending=false) {
+int sorting_test(int test_name, bool descending=false) {
     vector<int> test_list_1 = gen_unique_list(100);
     vector<int> test_list_2 = gen_random_list(100);
     vector<int> test_list_3 = gen_descending_list(100);
@@ -754,6 +754,7 @@ void sorting_test(int test_name, bool descending=false) {
     vector<int> test_list_7 = gen_one_percent_rand_list(100);
 
     string function_name = "";
+    int passed_tests = 0;
 
     switch(test_name){
         case test_types::BUBBLE:
@@ -852,87 +853,146 @@ void sorting_test(int test_name, bool descending=false) {
 
     if(is_list_sorted(test_list_1, descending)){
         cout <<  function_name + " UNIQUE LIST PASSED" << endl;
+        passed_tests++;
     } else {
         cout << function_name + " UNIQUE LIST FAILED" << endl;
     }
     
     if(is_list_sorted(test_list_2, descending)){
         cout <<  function_name +  " RANDOM LIST PASSED" << endl;
+        passed_tests++;
     } else {
         cout << function_name + " RANDOM LIST FAILED" << endl;
     }
 
     if(is_list_sorted(test_list_3, descending)){
         cout <<  function_name + " DESCENDING LIST PASSED" << endl;
+        passed_tests++;
     } else {
         cout << function_name + " DESCENDING LIST FAILED" << endl;
     }
 
     if(is_list_sorted(test_list_4, descending)){
         cout <<  function_name + " ASCENDING LIST PASSED" << endl;
+        passed_tests++;
     } else {
         cout << function_name + " ASCENDING LIST FAILED" << endl;
     }
 
     if(is_list_sorted(test_list_5, descending)){
         cout <<  function_name + " ALL EQUAL PASSED" << endl;
+        passed_tests++;
     } else {
         cout << function_name + " ALL EQUAL LIST FAILED" << endl;
     }
 
     if(is_list_sorted(test_list_6, descending)){
         cout <<  function_name + " MANY DUPLES LIST PASSED" << endl;
+        passed_tests++;
     } else {
         cout << function_name + " MANY DUPLES LIST FAILED" << endl;
     }
 
     if(is_list_sorted(test_list_7, descending)){
         cout << function_name + " ONE PERCENT RAND LIST PASSED" << endl;
+        passed_tests++;
     } else {
         cout << function_name + " ONE PERCENT RAND LIST FAILED" << endl;
     }
+    
+    return passed_tests;
 }
 
 
 
 
 int main() {
-    /**** STUDENT CODE HERE ****/ 
+    /**** STUDENT CODE HERE ****/
+    
+    int descending_points = 0;
+    int ascending_points = 0;
 
-
-    sorting_test(test_types::BUBBLE, true);
+    cout << "---- DESCENDING TESTS ----" << endl;
+    descending_points += sorting_test(test_types::BUBBLE, true);
 
     cout << "-----------------" << endl;
 
-    sorting_test(test_types::SELECTION, true);
+    descending_points += sorting_test(test_types::SELECTION, true);
 
     cout << "-----------------" << endl;
 
-    sorting_test(test_types::INSERTION, true);
+    descending_points += sorting_test(test_types::INSERTION, true);
 
     cout << "-----------------" << endl;
     
-    sorting_test(test_types::QUICK, true);
+    descending_points += sorting_test(test_types::QUICK, true);
     
     cout << "-----------------" << endl;
 
-    sorting_test(test_types::MERGE, true);
+    descending_points += sorting_test(test_types::MERGE, true);
     
     cout << "-----------------" << endl;
 
-    sorting_test(test_types::BUCKET_MERGE, true);
+    descending_points += sorting_test(test_types::BUCKET_MERGE, true);
     
     cout << "-----------------" << endl;
 
-    sorting_test(test_types::HYBRID, true);
+    descending_points += sorting_test(test_types::HYBRID, true);
 
     cout << "-----------------" << endl;
 
-    sorting_test(test_types::BINARY_RADIX, true);
+    descending_points += sorting_test(test_types::BINARY_RADIX, true);
 
     cout << "-----------------" << endl;
 
-    sorting_test(test_types::RADIX, true);
+    descending_points += sorting_test(test_types::RADIX, true);
+
+    cout << "---- END OF DESCENDING TESTS ----" << endl;
+    
+    cout << "---- ASCENDING TESTS ----" << endl;
+
+    ascending_points += sorting_test(test_types::BUBBLE, false);
+
+    cout << "-----------------" << endl;
+
+    ascending_points += sorting_test(test_types::SELECTION, false);
+
+    cout << "-----------------" << endl;
+
+    ascending_points += sorting_test(test_types::INSERTION, false);
+
+    cout << "-----------------" << endl;
+    
+    ascending_points += sorting_test(test_types::QUICK, false);
+    
+    cout << "-----------------" << endl;
+
+    ascending_points += sorting_test(test_types::MERGE, false);
+    
+    cout << "-----------------" << endl;
+
+    ascending_points += sorting_test(test_types::BUCKET_MERGE, false);
+    
+    cout << "-----------------" << endl;
+
+    ascending_points += sorting_test(test_types::HYBRID, false);
+
+    cout << "-----------------" << endl;
+
+    ascending_points += sorting_test(test_types::BINARY_RADIX, false);
+
+    cout << "-----------------" << endl;
+
+    ascending_points += sorting_test(test_types::RADIX, false);
+
+    cout << "---- END OF ASCENDING TESTS ----" << endl;
+    
+    cout << endl;
+    // 7 * 9 == 63, so there are 63 tests total
+    cout << "---- FINAL SCORES ----" << endl;
+    cout << "DESCENDING TESTS: " << descending_points << " / 63 passed" << endl;
+    cout << "ASCENDING TESTS: " << ascending_points << " / 63 passed" << endl;
+    cout << "-----------------" << endl;
     // vector<int> test_list = gen_ascending_list(70);
     // print_list_group(test_list);
     // binary_radix_sort(test_list, false);
