@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <chrono>
 #include <cmath>
+#include <cassert>
 
 using namespace std;
 
@@ -493,7 +494,7 @@ void my_hybrid_sort(vector<T> &list, bool descending) {
     // Your code here!
     // I'm implementing introsort because I'm BORED - Mauricio
     int max_recursion_depth = 2 * log2(list.size());
-    intro_sort(list, 0, list.size() -1, max_recursion_depth, descending);
+    intro_sort(list, 0, list.size() - 1, max_recursion_depth, descending);
 }
 
 template<typename T>
@@ -501,6 +502,7 @@ template<typename T>
 // Makes two partitions in place within the list
 // Return: index of partition
 int _partition(vector<T>& list, int low, int high, bool descending) {
+    if (low >= high) return low;
     // Choose a random pivot index in [low, high]
     int pivotIndex = low + get_rand_index(high - low + 1);
     T pivot = list[pivotIndex];
@@ -520,6 +522,7 @@ int _partition(vector<T>& list, int low, int high, bool descending) {
 
 template<typename T>
 void insertion_sort_w_range(vector<T> &list, int low, int high, bool descending) {
+    if (low >= high) return;
     for (int i = low + 1; i <= high; i++) {
         int j = i;
         if (descending) {
@@ -538,17 +541,19 @@ void insertion_sort_w_range(vector<T> &list, int low, int high, bool descending)
 
 template<typename T>
 void intro_sort(vector<T> &list, int low, int high, int max_depth, bool descending){
-    // Important business to start with: do we have a sorted list? "Sort" it!
-    if (high - low <= 1) return;
+    // Important business to start with: do we have a 'sorted' list? "Sort" it!
+    if (low >= high) return;
     // No. Is it insertion sortable? Insertion-sort it!
-    if (high - low + 1 <= 32) {
+    if (high - low + 1 <= 16) {
         insertion_sort_w_range(list, low, high, descending);
         return;
     }
     // No. Have we recursed too many times? Heap-sort it!
     // O(n log n)
-    if (max_depth <= 0) heap_sort(list, low, high,  descending);
-
+    if (max_depth <= 0) {
+        heap_sort(list, low, high,  descending);
+        return;
+    }
     // We proceed using quicksort as normal otherwise
     int partitionIndex = _partition(list, low, high, descending);
     // Now everything left of  <partitionIndex> is smaller than it
@@ -560,6 +565,7 @@ void intro_sort(vector<T> &list, int low, int high, int max_depth, bool descendi
 
 template<typename T>
 void heap_sort(vector<T> &list, int low, int high, bool descending){
+    if (low >= high) return;
     auto first = list.begin() + low;
     auto last = list.begin() + high + 1;
     // make_heap() + sort_heap() heapifies a vector with the front/first element being the largest
@@ -713,46 +719,49 @@ void sorting_test(int test_name, bool descending=false) {
         cout <<  function_name + " UNIQUE LIST PASSED" << endl;
     } else {
         cout << function_name + " UNIQUE LIST FAILED" << endl;
-        cout << "LIST CONTENTS: " << endl;
-        for (const auto& item : test_list_1){
-            cout << item << endl;
-        }
+        print_error_in_list(test_list_1, descending);
     }
     
     if(is_list_sorted(test_list_2, descending)){
         cout <<  function_name +  " RANDOM LIST PASSED" << endl;
     } else {
         cout << function_name + " RANDOM LIST FAILED" << endl;
+        print_error_in_list(test_list_2, descending);
     }
 
     if(is_list_sorted(test_list_3, descending)){
         cout <<  function_name + " DESCENDING LIST PASSED" << endl;
     } else {
         cout << function_name + " DESCENDING LIST FAILED" << endl;
+        print_error_in_list(test_list_3, descending);
     }
 
     if(is_list_sorted(test_list_4, descending)){
         cout <<  function_name + " ASCENDING LIST PASSED" << endl;
     } else {
         cout << function_name + " ASCENDING LIST FAILED" << endl;
+        print_error_in_list(test_list_4, descending);
     }
 
     if(is_list_sorted(test_list_5, descending)){
         cout <<  function_name + " ALL EQUAL PASSED" << endl;
     } else {
         cout << function_name + " ALL EQUAL LIST FAILED" << endl;
+        print_error_in_list(test_list_5, descending);
     }
 
     if(is_list_sorted(test_list_6, descending)){
         cout <<  function_name + " MANY DUPLES LIST PASSED" << endl;
     } else {
         cout << function_name + " MANY DUPLES LIST FAILED" << endl;
+        print_error_in_list(test_list_6, descending);
     }
 
     if(is_list_sorted(test_list_7, descending)){
         cout << function_name + " ONE PERCENT RAND LIST PASSED" << endl;
     } else {
         cout << function_name + " ONE PERCENT RAND LIST FAILED" << endl;
+        print_error_in_list(test_list_7, descending);
     }
 }
 
