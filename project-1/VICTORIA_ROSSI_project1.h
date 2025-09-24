@@ -22,6 +22,10 @@ unsigned int get_rand_index(unsigned int len) {
 
 void merge_sort_test();
 
+/** Helper type for integrals only **/
+template<class T>
+concept Integral = is_integral<T>::value;
+
 template<typename T>
 void intro_sort(vector<T> &list, int low, int high, int max_depth, bool descending);
 
@@ -34,7 +38,13 @@ void heap_sort(vector<T> &list, int low, int high, bool descending);
 template<typename T>
 int _partition(vector<T>& list, int low, int high, bool descending);
 
+template<Integral T>
+void radix_sort_step_base(vector<T> &a, unsigned int base, T exp);
+
+template<Integral T>
+void radix_sort_positive_base(vector<T> &list, unsigned int base);
 /*** END STUDENT HELPER FUNCTIONS ***/
+
 
 
 
@@ -42,11 +52,6 @@ int _partition(vector<T>& list, int low, int high, bool descending);
 
 /*** DO NOT MODIFY BELOW ***/
 /*** Main Functions for Students to Implement ***/
-
-/** Helper type for integrals only **/
-template<class T>
-concept Integral = is_integral<T>::value;
-
 
 /* Bubble Sort */
 template<typename T>
@@ -58,7 +63,7 @@ void selection_sort(vector<T> &list, bool descending = false);
 
 /* Insertion Sort */
 template<typename T>
-void insertion_sort(vector<T> &list, bool descending = false); 
+void insertion_sort(vector<T> &list, bool descending = false);
 
 /* Quick Sort */
 template<typename T>
@@ -88,7 +93,7 @@ void my_hybrid_sort(vector<T> &list, bool descending = false);
 
 
 /* Base B Radix Sort */
-template<Integral T> 
+template<Integral T>
 void radix_sort(vector<T> &list, unsigned int base = 10, bool descending = false);
 
 

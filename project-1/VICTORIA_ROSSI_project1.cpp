@@ -469,7 +469,7 @@ void bucket_merge_sort(vector<T> &list, bool descending) {
  *                      - (unsigned) int
  *                      - (unsigned) long int
  */
-template<Integral T> 
+template<Integral T>
 void binary_radix_sort(vector<T> &list, bool descending) {
     // Your code here!
     // I'm not doing this one - Mauricio
@@ -657,9 +657,82 @@ void heap_sort(vector<T> &list, int low, int high, bool descending){
  *
  *
  */
+// Stable counting step for one digit in base-B
+template<Integral T>
+void radix_sort_step_base(vector<T> &a, unsigned int base, T exp) {
+    size_t N = a.size();
+    vector<unsigned> cnt(base, 0);
+    vector<T> a_copy(N);
+    
+    // Count digit frequencies
+    for (size_t i = 0; i < N; i++) {
+        unsigned key = (a[i] / exp) % base;
+        cnt[key]++;
+        a_copy[i] = a[i];
+    }
+    
+    // Convert counts to starting indices
+    unsigned prefix_sum = 0;
+    for (auto &current : cnt) {
+        unsigned was = current;
+        current = prefix_sum;
+        prefix_sum += was;
+    }
+    
+    // Place items by digit order
+    for (auto x : a_copy) {
+        unsigned key = (x / exp) % base;
+        a[cnt[key]++] = x;
+    }
+}
+
+// Full radix sort with base-B, handles negatives and order
 template<Integral T>
 void radix_sort(vector<T> &list, unsigned int base, bool descending) {
-    // Your code here!
+    if (list.empty() || base < 2) return;
+    
+    // Get maximum absolute value
+    T max_val = 0;
+    for (auto item : list) {
+        T abs_val = (item < 0) ? -item : item;
+        if (abs_val > max_val) max_val = abs_val;
+    }
+    if (max_val == 0) return;
+    
+    // Split into negatives (as abs) and non-negatives
+    vector<T> negatives, non_negatives;
+    for (auto item : list) {
+        if (item < 0) negatives.push_back(-item);
+        else non_negatives.push_back(item);
+    }
+    
+    // Sort both parts
+    if (!negatives.empty()) radix_sort_positive_base(negatives, base);
+    if (!non_negatives.empty()) radix_sort_positive_base(non_negatives, base);
+    
+    // Merge depending on order
+    list.clear();
+    if (descending) {
+        reverse(non_negatives.begin(), non_negatives.end());
+        list.insert(list.end(), non_negatives.begin(), non_negatives.end());
+        for (auto val : negatives) list.push_back(-val);
+    } else {
+        reverse(negatives.begin(), negatives.end());
+        for (auto val : negatives) list.push_back(-val);
+        list.insert(list.end(), non_negatives.begin(), non_negatives.end());
+    }
+}
+
+// Radix sort for positive numbers only
+template<Integral T>
+void radix_sort_positive_base(vector<T> &list, unsigned int base) {
+    if (list.empty()) return;
+    T max_val = *max_element(list.begin(), list.end());
+    
+    // Process each digit
+    for (T exp = 1; max_val / exp > 0; exp *= base) {
+        radix_sort_step_base(list, base, exp);
+    }
 }
 
 
@@ -763,6 +836,16 @@ void sorting_test(int test_name, bool descending=false) {
             binary_radix_sort(test_list_7, descending);
             function_name = "BINARY RADIX SORT";
             break;
+        case test_types::RADIX:
+            radix_sort(test_list_1, 2, descending);
+            radix_sort(test_list_2, 10, descending);
+            radix_sort(test_list_3, 16, descending);
+            radix_sort(test_list_4, 2, descending);
+            radix_sort(test_list_5, 10, descending);
+            radix_sort(test_list_6, 16, descending);
+            radix_sort(test_list_7, 2, descending);
+            function_name = "RADIX SORT";
+            break;
         default:
             cout << "RUNNING MERGE SORT TESTS" << endl;
     }
@@ -771,49 +854,42 @@ void sorting_test(int test_name, bool descending=false) {
         cout <<  function_name + " UNIQUE LIST PASSED" << endl;
     } else {
         cout << function_name + " UNIQUE LIST FAILED" << endl;
-        print_error_in_list(test_list_1, descending);
     }
     
     if(is_list_sorted(test_list_2, descending)){
         cout <<  function_name +  " RANDOM LIST PASSED" << endl;
     } else {
         cout << function_name + " RANDOM LIST FAILED" << endl;
-        print_error_in_list(test_list_2, descending);
     }
 
     if(is_list_sorted(test_list_3, descending)){
         cout <<  function_name + " DESCENDING LIST PASSED" << endl;
     } else {
         cout << function_name + " DESCENDING LIST FAILED" << endl;
-        print_error_in_list(test_list_3, descending);
     }
 
     if(is_list_sorted(test_list_4, descending)){
         cout <<  function_name + " ASCENDING LIST PASSED" << endl;
     } else {
         cout << function_name + " ASCENDING LIST FAILED" << endl;
-        print_error_in_list(test_list_4, descending);
     }
 
     if(is_list_sorted(test_list_5, descending)){
         cout <<  function_name + " ALL EQUAL PASSED" << endl;
     } else {
         cout << function_name + " ALL EQUAL LIST FAILED" << endl;
-        print_error_in_list(test_list_5, descending);
     }
 
     if(is_list_sorted(test_list_6, descending)){
         cout <<  function_name + " MANY DUPLES LIST PASSED" << endl;
     } else {
         cout << function_name + " MANY DUPLES LIST FAILED" << endl;
-        print_error_in_list(test_list_6, descending);
     }
 
     if(is_list_sorted(test_list_7, descending)){
         cout << function_name + " ONE PERCENT RAND LIST PASSED" << endl;
     } else {
         cout << function_name + " ONE PERCENT RAND LIST FAILED" << endl;
-        print_error_in_list(test_list_7, descending);
     }
 }
 
@@ -853,6 +929,10 @@ int main() {
     cout << "-----------------" << endl;
 
     sorting_test(test_types::BINARY_RADIX, true);
+
+    cout << "-----------------" << endl;
+
+    sorting_test(test_types::RADIX, true);
     // vector<int> test_list = gen_ascending_list(70);
     // print_list_group(test_list);
     // binary_radix_sort(test_list, false);
