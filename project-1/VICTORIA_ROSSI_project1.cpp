@@ -7,6 +7,8 @@
 #include <cmath>
 #include <cassert>
 
+#include <climits> // for CHAR_BIT
+
 using namespace std;
 
 /****************
@@ -470,6 +472,46 @@ void bucket_merge_sort(vector<T> &list, bool descending) {
 template<Integral T> 
 void binary_radix_sort(vector<T> &list, bool descending) {
     // Your code here!
+    // I'm not doing this one - Mauricio
+
+    vector<T> zero_bucket, one_bucket;
+
+    const int bits = sizeof(T) * CHAR_BIT; // number of bits in T which could be a short, int or long
+
+    for (int bit = 0; bit < bits; bit++){
+        zero_bucket.clear();
+        one_bucket.clear();
+
+        for (const auto& item : list){
+            if ((item >> bit) & 1) one_bucket.push_back(item);
+            else zero_bucket.push_back(item);
+        }
+
+        list.clear();
+
+        const bool is_msb = (bit == bits - 1);
+        if (!is_msb) {
+            // normal passes
+            if (descending) {
+                list.insert(list.end(), one_bucket.begin(), one_bucket.end());
+                list.insert(list.end(), zero_bucket.begin(), zero_bucket.end());
+            } else {
+                list.insert(list.end(), zero_bucket.begin(), zero_bucket.end());
+                list.insert(list.end(), one_bucket.begin(), one_bucket.end());
+            }
+        } else {
+            // final (sign-bit) pass: flip order
+            if (descending) {
+                // positives (0) before negatives (1)
+                list.insert(list.end(), zero_bucket.begin(), zero_bucket.end());
+                list.insert(list.end(), one_bucket.begin(), one_bucket.end());
+            } else {
+                // negatives (1) before non-negatives (0)
+                list.insert(list.end(), one_bucket.begin(), one_bucket.end());
+                list.insert(list.end(), zero_bucket.begin(), zero_bucket.end());
+            }
+        }
+    }
 }
 
 
@@ -711,6 +753,16 @@ void sorting_test(int test_name, bool descending=false) {
             my_hybrid_sort(test_list_7, descending);
             function_name = "INTRO SORT";
             break;
+        case test_types::BINARY_RADIX:
+            binary_radix_sort(test_list_1, descending);
+            binary_radix_sort(test_list_2, descending);
+            binary_radix_sort(test_list_3, descending);
+            binary_radix_sort(test_list_4, descending);
+            binary_radix_sort(test_list_5, descending);
+            binary_radix_sort(test_list_6, descending);
+            binary_radix_sort(test_list_7, descending);
+            function_name = "BINARY RADIX SORT";
+            break;
         default:
             cout << "RUNNING MERGE SORT TESTS" << endl;
     }
@@ -797,9 +849,13 @@ int main() {
     cout << "-----------------" << endl;
 
     sorting_test(test_types::HYBRID, true);
-    // vector<int> test_list = gen_unique_list(70);
+
+    cout << "-----------------" << endl;
+
+    sorting_test(test_types::BINARY_RADIX, true);
+    // vector<int> test_list = gen_ascending_list(70);
     // print_list_group(test_list);
-    // bucket_merge_sort(test_list, false);
+    // binary_radix_sort(test_list, false);
     // print_list_group(test_list);
 
 
