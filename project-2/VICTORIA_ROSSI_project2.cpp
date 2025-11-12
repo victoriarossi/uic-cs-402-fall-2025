@@ -1,10 +1,13 @@
 #include <functional>
 #include <limits.h>
-#include <random>
+#include <vector>
+#include <unordered_map>
+#include <queue>
 #include <iostream>
+#include <random>
 
 // be sure to change FIRSTNAME and LASTNAME with your own first and last name
-#include "Firstname_Lastname_project2.h"
+#include "VICTORIA_ROSSI_project2.h"
 
 using namespace std;
 
@@ -96,10 +99,19 @@ vector<unsigned int> birthday_attack_1(function<unsigned short(unsigned int)> ha
     //     vector<long> out = birthday_attack_1(test_hash);
     // Note you can implement your own test hash functions so long as their 
     // signatures match the `test_hash` function signature.
-    
-    // Your code here!
-    
-    return {0,1};
+    for(int attempt = 0; attempt < 5; attempt++){
+        unordered_map<unsigned short, unsigned int> hash_map;
+        for(int i = 0; i < 256; i++){
+            unsigned int rand_input = sample_int();
+            unsigned short hash_value = hash_function(rand_input);
+            if(hash_map.find(hash_value) != hash_map.end()){
+                return {hash_map[hash_value], rand_input};
+            } else {
+                hash_map[hash_value] = rand_input;
+            }
+        }
+    }
+    return {};
 }
 
 
@@ -123,6 +135,8 @@ vector<unsigned int> birthday_attack_1(function<unsigned short(unsigned int)> ha
  *   as the output type to make things simple.
  * - The hash function will take `unsigned integers` as input, again to make things simple.
  * - Your function will output two inputs a and b such that h(a) = h(b) (a collision), as a list [a, b].
+ *   The output type of the function will be `vector<unsigned int>` to ensure that you can output -1 and
+ *   to ensure there is no loss from converting a,b to a signed data-type.
  *
  * Algorithm Description
  * - Maintain two values, `tort` and `hare`, initialized as 
@@ -152,9 +166,21 @@ vector<unsigned int> birthday_attack_2(function<unsigned short(unsigned int)> ha
     // Note you can implement your own test hash functions so long as their 
     // signatures match the `test_hash` function signature.
     
-    // Your code here!
+    unsigned int tort = hash_function(0);
+    unsigned int hare = hash_function(hash_function(0));
+    
+    while(tort != hare){
+        tort = hash_function(tort);
+        hare = hash_function(hash_function(hare));
+    }
 
-    return {0, 1};
+    tort = 0; 
+    while(hash_function(tort) != hash_function(hare)){
+        tort = hash_function(tort);
+        hare = hash_function(hare);
+    }
+
+    return {tort, hare};
 }
 
 
@@ -181,12 +207,7 @@ vector<unsigned int> birthday_attack_2(function<unsigned short(unsigned int)> ha
  * Note: Edge is a struct defined in Firstname_Lastname_project2.h.
  *
  */
-
-
 vector<int> topological_sort(int n, vector<Edge> edges) {
-    // Your code here!
-
-    return {};
 }
 
 
@@ -218,10 +239,59 @@ vector<int> topological_sort(int n, vector<Edge> edges) {
  *
  */
 vector<int> dag_single_source(int n, vector<Edge> edges, int source) {
-
-    return {};
+    // Build adjacency list and compute in-degrees
+    vector<vector<pair<int, int>>> adj(n); // adj[u] = {(v, weight), ...}
+    vector<int> in_degree(n, 0);
+    
+    for (const Edge& e : edges) {
+        adj[e.from].push_back({e.to, e.weight});
+        in_degree[e.to]++;
+    }
+    
+    // Perform topological sort using Kahn's algorithm
+    queue<int> q;
+    vector<int> topo_order;
+    
+    for (int i = 0; i < n; i++) {
+        if (in_degree[i] == 0) {
+            q.push(i);
+        }
+    }
+    
+    while (!q.empty()) {
+        int u = q.front();
+        q.pop();
+        topo_order.push_back(u);
+        
+        for (auto [v, w] : adj[u]) {
+            in_degree[v]--;
+            if (in_degree[v] == 0) {
+                q.push(v);
+            }
+        }
+    }
+    
+    // Initialize distances
+    vector<int> dist(n, INT_MAX);
+    dist[source] = 0;
+    
+    // Process vertices in topological order
+    for (int u : topo_order) {
+        // Skip if this vertex is unreachable from source
+        if (dist[u] == INT_MAX) {
+            continue;
+        }
+        
+        // Relax all outgoing edges
+        for (auto [v, w] : adj[u]) {
+            if (dist[u] != INT_MAX && dist[u] + w < dist[v]) {
+                dist[v] = dist[u] + w;
+            }
+        }
+    }
+    
+    return dist;
 }
-
 
 /* Dijkstra's Algorithm
  *
@@ -255,8 +325,6 @@ vector<Node> dijkstras_algorithm(int n, vector<Edge> edges, int source) {
     // Your code here!
     // Note: see the LeetCode from in-class for the problem "Cheapest Flights
     // K stops" to see how you can create a priority_queue with the Node struct.
-    
-    return {};
 }
 
 
@@ -336,7 +404,6 @@ vector<Node> dijkstras_algorithm(int n, vector<Edge> edges, int source) {
  *      - In A*, this is modified as: v.cost = u.cost + weight(u,v) + heuristic_cost(v, target),
  *        where heuristic_cost(v, target) is a heuristic distance from node v to the target node
  *        target.
- *          - Note you also change the dijkstra's check to u.cost+weight(u,v)+heuristic_cost(v,target) < v.cost
  *  
  *  As part of your implementation of A*, you are required to implement the function
  *  heuristic_cost(GridNode start, GridNode dest) defined below. Your heuristic should never
@@ -373,16 +440,8 @@ vector<GridNode> a_star_algorithm(
     // Your code here!
     // Be sure to use "h" from the inputs in your implementation; do not
     // directly use "heruistic_cost" above!
-
-    return {};
 }
 
 int main() {
-    birthday_attack_1(test_hash);
-    birthday_attack_2(test_hash);
-
-    topological_sort(1, {});
-    dag_single_source(1, {}, 0);
-
     return 0;
 }

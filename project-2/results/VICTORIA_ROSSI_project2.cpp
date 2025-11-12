@@ -1,14 +1,13 @@
 Project 2 Test Results
 
+TestCase                                Result
 ================================================================
-Failed to precompile:
-.../Firstname_Lastname_project2.cpp:7:10: fatal error: Firstname_Lastname_project2.h: No such file or directory
-    7 | #include "Firstname_Lastname_project2.h"
-      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-compilation terminated.
-
+birthday-1.cpp                          10/10
+birthday-2.cpp                          0.0/5 (Wrong answer)
+dag-single-source.cpp                   10/10
+topological-sort.cpp                    0.0/5 (Wrong answer)
 ================================================================
-Result: 0/30
+Result: 20/30
 
 Key:
 	Failed to Compile: Your submission did not compile due to a syntax or naming error
