@@ -101,7 +101,7 @@ vector<unsigned int> birthday_attack_1(function<unsigned short(unsigned int)> ha
     // signatures match the `test_hash` function signature.
     for(int attempt = 0; attempt < 5; attempt++){
         unordered_map<unsigned short, unsigned int> hash_map;
-        for(int i = 0; i < 256; i++){
+        for(int i = 0; i < 350; i++){
             unsigned int rand_input = sample_int();
             unsigned short hash_value = hash_function(rand_input);
             if(hash_map.find(hash_value) != hash_map.end()){
@@ -208,6 +208,46 @@ vector<unsigned int> birthday_attack_2(function<unsigned short(unsigned int)> ha
  *
  */
 vector<int> topological_sort(int n, vector<Edge> edges) {
+    // Build adjacency list and calculate in-degrees
+    vector<vector<int>> adj(n);
+    vector<int> in_degree(n, 0);
+    
+    for (const Edge& e : edges) {
+        adj[e.from].push_back(e.to);
+        in_degree[e.to]++;
+    }
+    
+    // Find all nodes with in-degree 0 (no dependencies)
+    queue<int> q;
+    for (int i = 0; i < n; i++) {
+        if (in_degree[i] == 0) {
+            q.push(i);
+        }
+    }
+    
+    // Process nodes in topological order
+    vector<int> result;
+    while (!q.empty()) {
+        int node = q.front();
+        q.pop();
+        result.push_back(node);
+        
+        // Reduce in-degree for all neighbors
+        for (int neighbor : adj[node]) {
+            in_degree[neighbor]--;
+            if (in_degree[neighbor] == 0) {
+                q.push(neighbor);
+            }
+        }
+    }
+    
+    // If we processed all nodes, we have a valid topological sort
+    // Otherwise, there's a cycle and no topological sort exists
+    if (result.size() == n) {
+        return result;
+    } else {
+        return vector<int>(); // Return empty vector (cycle detected)
+    }
 }
 
 
