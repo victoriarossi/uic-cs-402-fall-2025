@@ -359,12 +359,53 @@ vector<int> dag_single_source(int n, vector<Edge> edges, int source) {
  * 
  * Note: Node is a struct defined in Firstname_Lastname_project2.h.
  */
-
-
 vector<Node> dijkstras_algorithm(int n, vector<Edge> edges, int source) {
     // Your code here!
     // Note: see the LeetCode from in-class for the problem "Cheapest Flights
     // K stops" to see how you can create a priority_queue with the Node struct.
+
+    // Build adj list
+    vector<vector<pair<int, int>>> adj(n); 
+    for (const Edge& e : edges) {
+        adj[e.from].push_back({e.to, e.weight});
+    }
+
+    priority_queue<Node, std::vector<Node>, std::greater<Node>> min_queue;
+    vector<Node> nodes(n);
+    vector<bool> visited(n, false);  
+
+    // Initialize nodes with -1
+    for(int i = 0; i < n; i++){
+        nodes[i] = Node{i, INT_MAX, -1};
+    }
+
+    nodes[source].path_cost = 0;
+    min_queue.push(nodes[source]);
+
+    while(!min_queue.empty()){
+        Node current = min_queue.top();
+        min_queue.pop();
+
+        // Skip if already visited
+        if(visited[current.id]){
+            continue;
+        }
+
+        visited[current.id] = true;
+
+        // Explore neighbors
+        for (auto [neighbor, weight] : adj[current.id]) {
+            int new_cost = nodes[current.id].path_cost + weight;
+            
+            // If we found a shorter path, update it
+            if (new_cost < nodes[neighbor].path_cost) {
+                nodes[neighbor].path_cost = new_cost;
+                nodes[neighbor].pred = current.id;
+                min_queue.push(nodes[neighbor]);
+            }
+        }
+    }
+    return nodes;
 }
 
 
@@ -464,6 +505,7 @@ vector<Node> dijkstras_algorithm(int n, vector<Edge> edges, int source) {
 // You must implement this function.
 double heuristic_cost(GridNode start, GridNode dest) {
     // Your code here!
+    return 0.0;
 }
 
 // To test your algorithm with the function "heruistic_cost" above,
@@ -480,6 +522,7 @@ vector<GridNode> a_star_algorithm(
     // Your code here!
     // Be sure to use "h" from the inputs in your implementation; do not
     // directly use "heruistic_cost" above!
+    return {};
 }
 
 int main() {
