@@ -175,6 +175,7 @@ vector<unsigned int> birthday_attack_2(function<unsigned short(unsigned int)> ha
     }
 
     tort = 0; 
+
     while(hash_function(tort) != hash_function(hare)){
         tort = hash_function(tort);
         hare = hash_function(hare);
@@ -504,8 +505,16 @@ vector<Node> dijkstras_algorithm(int n, vector<Edge> edges, int source) {
 
 // You must implement this function.
 double heuristic_cost(GridNode start, GridNode dest) {
-    // Your code here!
-    return 0.0;
+    int dx = abs(start.x - dest.x);
+    int dy = abs(start.y - dest.y);
+    
+    // Diagonal distance heuristic
+    // Move diagonally as much as possible (min of dx, dy)
+    // Then move straight for remaining distance
+    int diagonal_steps = min(dx, dy);
+    int straight_steps = abs(dx - dy);
+    
+    return diagonal_steps * 1.5 + straight_steps * 1.0;
 }
 
 // To test your algorithm with the function "heruistic_cost" above,
@@ -519,10 +528,104 @@ vector<GridNode> a_star_algorithm(
     function<double(GridNode,GridNode)> h
 ) 
 {
-    // Your code here!
-    // Be sure to use "h" from the inputs in your implementation; do not
-    // directly use "heruistic_cost" above!
-    return {};
+    // Build adjacency list
+    vector<vector<vector<pair<int,int>>>> adj(n, vector<vector<pair<int,int>>>(m));
+    for (const auto& e : edges) {
+        adj[e.from_y][e.from_x].push_back({e.to_x, e.to_y});
+        adj[e.to_y][e.to_x].push_back({e.from_x, e.from_y});
+    }
+
+    // Positive inf value, to init costs (better than using INT_MAX bc of precision for doubles)
+    double inf = numeric_limits<double>::infinity();
+    vector<vector<double>> g(n, vector<double>(m, inf)); // g-cost tracker (distance from start to curr node)
+    // f-cost tracker (total estimated cost of the cheapest path)
+    // f = g + h
+    vector<vector<double>> f(n, vector<double>(m, inf)); 
+    vector<vector<int>> pred_x(n, vector<int>(m, -1)); // Store x-coordinate predecessors 
+    vector<vector<int>> pred_y(n, vector<int>(m, -1)); // Store y-coordinate predecessors
+
+    // 1. Initialize the open list. Using greater to make a min-heap 
+    priority_queue<GridNode, vector<GridNode>, std::greater<GridNode>> open;
+    // 2. Initialize the closed listput the starting node on the open list (you can leave its f at zero)
+    // To keep track of closed list
+    // closed[y][x] = true if node (x,y) is done being processed
+    // closed[y][x] = false if node (x,y) is not done being processed
+    vector<vector<bool>> closed(n, vector<bool>(m, false));
+
+    g[source.y][source.x] = 0.0;
+    f[source.y][source.x] = h(source, target);
+    source.path_cost = f[source.y][source.x];
+    source.pred_x = -1;
+    source.pred_y = -1;
+    open.push(source);
+
+    // While the open list is not empty
+    while (!open.empty()) {
+        // a) Find the node with the least f on the open list (pq ), call it "q"
+        // b) Pop q off the open list
+  
+        GridNode q = open.top();
+        open.pop();
+        int x = q.x;
+        int y = q.y;
+
+        if (closed[y][x]) continue; // Already processed
+        if (x == target.x && y == target.y) break; // Found target
+
+        closed[y][x] = true; // e) push q on the closed list
+        
+        // Expand neighbors (for each successor)
+        for (const auto& nb : adj[y][x]) {
+            int nx = nb.first;
+            int ny = nb.second;
+            if (closed[ny][nx]) continue; // Already processed
+
+            // Compute cost and new possible cost from start to neighbor via current node 
+            double move_cost = (abs(nx - x) + abs(ny - y) == 2) ? 1.5 : 1.0; 
+            double tentative_g = g[y][x] + move_cost;
+
+            // If new path to neighbor is cheaper, update costs and predecessor
+            if (tentative_g < g[ny][nx]) {
+                g[ny][nx] = tentative_g;
+                pred_x[ny][nx] = x;
+                pred_y[ny][nx] = y;
+
+                // Add neighbor (create copy to not change current values) to open list with updated f-cost
+                GridNode v;
+                v.x = nx;
+                v.y = ny;
+                v.pred_x = x;
+                v.pred_y = y;
+                double hv = h(v, target);
+                f[ny][nx] = tentative_g + hv; 
+                v.path_cost = f[ny][nx];
+                open.push(v);
+            }
+        }
+    }
+
+    if (g[target.y][target.x] == inf) return {}; // Target unreachable
+
+    // Reconstruct path from source to target using predecessors
+    vector<GridNode> path;
+    int cx = target.x;
+    int cy = target.y;
+    while (cx != -1 && cy != -1) {
+        GridNode node;
+        node.x = cx;
+        node.y = cy;
+        node.path_cost = g[cy][cx];
+        node.pred_x = pred_x[cy][cx];
+        node.pred_y = pred_y[cy][cx];
+        path.push_back(node);
+        int pcx = pred_x[cy][cx];
+        int pcy = pred_y[cy][cx];
+        cx = pcx;
+        cy = pcy;
+    }
+
+    reverse(path.begin(), path.end());
+    return path;
 }
 
 int main() {

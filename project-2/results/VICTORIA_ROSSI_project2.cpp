@@ -4,7 +4,9 @@ TestCase                                Result
 ================================================================
 astar.cpp                               25/25
 birthday-1.cpp                          10/10
-birthday-2.cpp                          0.0/5 (Wrong answer)
+birthday-2.cpp                          Crashed due to signal 0:
+
+
 dag-single-source.cpp                   10/10
 dijkstras.cpp                           20/20
 topological-sort.cpp                    5/5
